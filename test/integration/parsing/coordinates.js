@@ -61,6 +61,18 @@ describe('.parse() coordinates', () => {
     expect(parser.parse('$$A$1')).toMatchObject({error: '#ERROR!', result: null});
   });
 
+  it('should parse named cell', () => {
+    expect(parser.parse('@named_cell')).toMatchObject({error: null, result: 55});
+    expect(cellCoord).toMatchObject({
+      label: '@NAMED_CELL',
+      row: undefined,
+      column: undefined,
+    });
+
+    expect(parser.parse('@.named_cell')).toMatchObject({error: '#ERROR!', result: null});
+    expect(parser.parse('@!named_cell')).toMatchObject({error: '#ERROR!', result: null});
+  });
+
   it('should parse mixed cell', () => {
     expect(parser.parse('$A1')).toMatchObject({error: null, result: 55});
     expect(cellCoord).toMatchObject({
@@ -181,6 +193,28 @@ describe('.parse() coordinates', () => {
     expect(parser.parse('$A$1:$B$$2')).toMatchObject({error: '#ERROR!', result: null});
     expect(parser.parse('$A$1:$$B$2')).toMatchObject({error: '#ERROR!', result: null});
     expect(parser.parse('$$A$1:$B$2')).toMatchObject({error: '#ERROR!', result: null});
+  });
+
+  it('should parse named cells range', () => {
+    expect(parser.parse('@NAMED_CELL1:@NAMED_CELL2')).toMatchObject({error: null, result: [[3, 6, 10]]});
+    expect(startCellCoord).toMatchObject({
+      label: '@NAMED_CELL1',
+    });
+    expect(endCellCoord).toMatchObject({
+      label: '@NAMED_CELL2',
+    });
+
+    expect(parser.parse('@named_cell1:@named_cell2')).toMatchObject({error: null, result: [[3, 6, 10]]});
+    expect(startCellCoord).toMatchObject({
+      label: '@NAMED_CELL1',
+    });
+    expect(endCellCoord).toMatchObject({
+      label: '@NAMED_CELL2',
+    });
+
+    expect(parser.parse('@named_cell1:named_cell2')).toMatchObject({error: '#ERROR!', result: null});
+    expect(parser.parse('@named_cell1:named!cell2')).toMatchObject({error: '#ERROR!', result: null});
+    expect(parser.parse('!named_cell1:@named_cell2')).toMatchObject({error: '#ERROR!', result: null});
   });
 
   it('should parse mixed cells range', () => {

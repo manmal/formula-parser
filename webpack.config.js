@@ -8,6 +8,7 @@ const NODE_ENV = process.env.NODE_ENV;
 
 const config = {
   mode: 'production',
+  target: 'node',
   devtool: false,
   entry: {
     main: path.resolve(ROOT_DIRECTORY, 'src/index.js'),
