@@ -7,7 +7,7 @@
 		exports["formulaParser"] = factory();
 	else
 		root["formulaParser"] = factory();
-})(window, function() {
+})(global, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
