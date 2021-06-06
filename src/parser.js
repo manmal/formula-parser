@@ -195,31 +195,38 @@ class Parser extends Emitter {
   _callRangeValue(startLabel, endLabel) {
     startLabel = startLabel.toUpperCase();
     endLabel = endLabel.toUpperCase();
-
-    const [startRow, startColumn] = extractLabel(startLabel);
-    const [endRow, endColumn] = extractLabel(endLabel);
     let startCell = {};
     let endCell = {};
 
-    if (startRow.index <= endRow.index) {
-      startCell.row = startRow;
-      endCell.row = endRow;
+    if (startLabel.charAt(0) === "@" && endLabel.charAt(0) === "@") {
+      // Named cell range
+      startCell.label = startLabel;
+      endCell.label = endLabel;
     } else {
-      startCell.row = endRow;
-      endCell.row = startRow;
+      // Other ranges
+      const [startRow, startColumn] = extractLabel(startLabel);
+      const [endRow, endColumn] = extractLabel(endLabel);
+  
+      if (startRow.index <= endRow.index) {
+        startCell.row = startRow;
+        endCell.row = endRow;
+      } else {
+        startCell.row = endRow;
+        endCell.row = startRow;
+      }
+  
+      if (startColumn.index <= endColumn.index) {
+        startCell.column = startColumn;
+        endCell.column = endColumn;
+      } else {
+        startCell.column = endColumn;
+        endCell.column = startColumn;
+      }
+  
+      startCell.label = toLabel(startCell.row, startCell.column);
+      endCell.label = toLabel(endCell.row, endCell.column);
     }
-
-    if (startColumn.index <= endColumn.index) {
-      startCell.column = startColumn;
-      endCell.column = endColumn;
-    } else {
-      startCell.column = endColumn;
-      endCell.column = startColumn;
-    }
-
-    startCell.label = toLabel(startCell.row, startCell.column);
-    endCell.label = toLabel(endCell.row, endCell.column);
-
+  
     let value = [];
 
     this.emit('callRangeValue', startCell, endCell, (_value = []) => {
