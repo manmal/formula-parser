@@ -28,7 +28,7 @@ describe('.parse() logical formulas', () => {
   });
 
   it('IF', () => {
-    expect(parser.parse('IF()')).toMatchObject({error: null, result: true});
+    expect(parser.parse('IF()')).toMatchObject({error: "#NAME?", result: null});
     expect(parser.parse('IF(TRUE, 1, 2)')).toMatchObject({error: null, result: 1});
     expect(parser.parse('IF(FALSE, 1, 2)')).toMatchObject({error: null, result: 2});
   });

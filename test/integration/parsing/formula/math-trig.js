@@ -226,7 +226,7 @@ describe('.parse() math-trig formulas', () => {
 
   it('EXP', () => {
     expect(parser.parse('EXP()')).toMatchObject({error: '#N/A', result: null});
-    expect(parser.parse('EXP(MY_VAR)')).toMatchObject({error: '#NAME?', result: null});
+    expect(parser.parse('EXP(MY_VAR)')).toMatchObject({error: '#ERROR!', result: null});
     expect(parser.parse('EXP("1")')).toMatchObject({error: '#ERROR!', result: null});
     expect(parser.parse('EXP(1, 1)')).toMatchObject({error: '#ERROR!', result: null});
     expect(parser.parse('EXP(1)')).toMatchObject({error: null, result: 2.718281828459045});
@@ -517,7 +517,7 @@ describe('.parse() math-trig formulas', () => {
   });
 
   it('SERIESSUM', () => {
-    parser.setVariable('SERIESSUM_ARR', [
+    parser.setConstant('SERIESSUM_ARR', [
       1,
       -1 / parser.parse('FACT(2)').result,
       1 / parser.parse('FACT(4)').result,

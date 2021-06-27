@@ -7,14 +7,8 @@
 "'"('\\'[']|[^'])*"'"                                        {return 'STRING';}
 [A-Za-z]{1,}[A-Za-z_0-9\.]+(?=[(])                           {return 'FUNCTION';}
 '#'[A-Z0-9\/]+('!'|'?')?                                     {return 'ERROR';}
-'$'[A-Za-z]+'$'[0-9]+                                        {return 'ABSOLUTE_CELL';}
-'$'[A-Za-z]+[0-9]+                                           {return 'MIXED_CELL';}
-[A-Za-z]+'$'[0-9]+                                           {return 'MIXED_CELL';}
-[A-Za-z]+[0-9]+                                              {return 'RELATIVE_CELL';}
-'@'[A-Z0-9_]+                                                {return 'NAMED_CELL';}
+[A-Za-z@]{1,}[A-Za-z_0-9!@]+                                 {return 'REFERENCE';}
 [A-Za-z\.]+(?=[(])                                           {return 'FUNCTION';}
-[A-Za-z]{1,}[A-Za-z_0-9]+                                    {return 'VARIABLE';}
-[A-Za-z_]+                                                   {return 'VARIABLE';}
 [0-9]+                                                       {return 'NUMBER';}
 '['(.*)?']'                                                  {return 'ARRAY';}
 "&"                                                          {return '&';}
@@ -64,10 +58,7 @@ expressions
 ;
 
 expression
-  : variableSequence {
-      $$ = yy.callVariable($1[0]);
-    }
-  | number {
+  : number {
       $$ = yy.toNumber($1);
     }
   | STRING {
@@ -139,52 +130,16 @@ expression
   | FUNCTION '(' expseq ')' {
       $$ = yy.callFunction($1, $3);
     }
-  | cell
+  | reference
   | error
   | error error
 ;
 
-cell
-   : ABSOLUTE_CELL {
-      $$ = yy.cellValue($1);
+reference
+   : REFERENCE {
+      $$ = yy.referenceValue($1);
     }
-  | NAMED_CELL {
-      $$ = yy.cellValue($1);
-    }
-  | RELATIVE_CELL {
-      $$ = yy.cellValue($1);
-    }
-  | MIXED_CELL {
-      $$ = yy.cellValue($1);
-    }
-  | NAMED_CELL ':' NAMED_CELL {
-      $$ = yy.rangeValue($1, $3);
-    }
-  | ABSOLUTE_CELL ':' ABSOLUTE_CELL {
-      $$ = yy.rangeValue($1, $3);
-    }
-  | ABSOLUTE_CELL ':' RELATIVE_CELL {
-      $$ = yy.rangeValue($1, $3);
-    }
-  | ABSOLUTE_CELL ':' MIXED_CELL {
-      $$ = yy.rangeValue($1, $3);
-    }
-  | RELATIVE_CELL ':' ABSOLUTE_CELL {
-      $$ = yy.rangeValue($1, $3);
-    }
-  | RELATIVE_CELL ':' RELATIVE_CELL {
-      $$ = yy.rangeValue($1, $3);
-    }
-  | RELATIVE_CELL ':' MIXED_CELL {
-      $$ = yy.rangeValue($1, $3);
-    }
-  | MIXED_CELL ':' ABSOLUTE_CELL {
-      $$ = yy.rangeValue($1, $3);
-    }
-  | MIXED_CELL ':' RELATIVE_CELL {
-      $$ = yy.rangeValue($1, $3);
-    }
-  | MIXED_CELL ':' MIXED_CELL {
+  | REFERENCE ':' REFERENCE {
       $$ = yy.rangeValue($1, $3);
     }
 ;
@@ -203,16 +158,6 @@ expseq
   | expseq ',' expression {
       $1.push($3);
       $$ = $1;
-    }
-;
-
-variableSequence
-  : VARIABLE {
-      $$ = [$1];
-    }
-  | variableSequence DECIMAL VARIABLE {
-      $$ = (Array.isArray($1) ? $1 : [$1]);
-      $$.push($3);
     }
 ;
 

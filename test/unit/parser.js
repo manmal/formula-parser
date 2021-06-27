@@ -108,7 +108,7 @@ describe('Parser', () => {
     });
   });
 
-  describe('.setVariable()/.getVariable()', () => {
+  describe('.setConstant()/.getVariable()', () => {
     it('should return default variables', () => {
       expect(parser.getVariable('TRUE')).toBe(true);
       expect(parser.getVariable('FALSE')).toBe(false);
@@ -117,9 +117,9 @@ describe('Parser', () => {
     });
 
     it('should return custom variables', () => {
-      parser.setVariable('foo', 1234);
-      parser.setVariable('bar', '1234');
-      parser.setVariable('baz', [1, 2]);
+      parser.setConstant('foo', 1234);
+      parser.setConstant('bar', '1234');
+      parser.setConstant('baz', [1, 2]);
 
       expect(parser.getVariable('foo')).toBe(1234);
       expect(parser.getVariable('bar')).toBe('1234');
@@ -192,38 +192,11 @@ describe('Parser', () => {
     });
   });
 
-  describe('._callCellValue()', () => {
+  describe('._callReferenceValue()', () => {
     it('should return undefined if under specified coordinates data value not exist', () => {
-      expect(parser._callCellValue('A1')).not.toBeDefined();
+      expect(parser._callReferenceValue('A1')).not.toBeDefined();
     });
 
-    it('should return value under specified coordinates', () => {
-      parser.on('callCellValue', (cell, done) => {
-        const {row, column} = cell;
-        let value;
-
-        if (row.index === 0 && column.index === 2) {
-          value = '4';
-        } else if (row.index === 0 && column.index === 7) {
-          value = 45;
-        } else if (row.index === 2 && column.index === 7) {
-          value = [1, 2, 3];
-        } else if (row.index === 3 && column.index === 7 && column.isAbsolute) {
-          value = true;
-        } else if (row.index === 4 && row.isAbsolute && column.index === 7 && column.isAbsolute) {
-          value = 0.9;
-        }
-
-        done(value);
-      });
-
-      expect(parser._callCellValue('A1')).toBe(void 0);
-      expect(parser._callCellValue('C1')).toBe('4');
-      expect(parser._callCellValue('H1')).toBe(45);
-      expect(parser._callCellValue('H3')).toMatchObject([1, 2, 3]);
-      expect(parser._callCellValue('$H4')).toBe(true);
-      expect(parser._callCellValue('$H$5')).toBe(0.9);
-    });
   });
 
   describe('._callRangeValue()', () => {
@@ -231,48 +204,17 @@ describe('Parser', () => {
       expect(parser._callRangeValue('A1', 'B2')).toMatchObject([]);
     });
 
-    it('should return value under specified coordinates', () => {
-      parser.on('callRangeValue', (firstCell, lastCell, done) => {
-        const {row: row1, column: column1} = firstCell;
-        const {row: row2, column: column2} = lastCell;
-        let value;
-
-        if (row1.index === 0 && column1.index === 2 && row2.index === 3 && column2.index === 3) {
-          value = [[1, 2], [4, 5]];
-        } else if (row1.index === 0 && row1.isAbsolute && column1.index === 0 &&
-                   row2.index === 3 && column2.index === 3 && column2.isAbsolute) {
-          value = [['a', 'b'], ['z', 'd']];
-        } else if (row1.index === 0 && row1.isAbsolute && column1.index === 0 && column1.isAbsolute &&
-                   row2.index === 4 && row2.isAbsolute && column2.index === 4 && column2.isAbsolute) {
-          value = [[true, false], [true, true]];
-
-        } else if (row1.index === 4 && row1.isAbsolute && column1.index === 7 && column1.isAbsolute) {
-          value = 0.9;
-        }
-
-        done(value);
-      });
-
-      expect(parser._callRangeValue('C1', 'D4')).toMatchObject([[1, 2], [4, 5]]);
-      expect(parser._callRangeValue('A$1', '$D4')).toMatchObject([['a', 'b'], ['z', 'd']]);
-      expect(parser._callRangeValue('$A$1', '$E$5')).toMatchObject([[true, false], [true, true]]);
-    });
-
     it('should convert coordinates in top-left bottom-right format (from bottom-left to top-right)', () => {
       const cb = jest.fn();
 
       parser.on('callRangeValue', cb);
-      parser._callRangeValue('$A$9', 'B2');
+      parser._callRangeValue('A9', 'B2');
 
       const startCell = {
-        row: {index: 1, isAbsolute: false, label: '2'},
-        column: {index: 0, isAbsolute: true, label: 'A'},
-        label: '$A2',
+        label: 'A9'
       };
       const endCell = {
-        row: {index: 8, isAbsolute: true, label: '9'},
-        column: {index: 1, isAbsolute: false, label: 'B'},
-        label: 'B$9',
+        label: 'B2'
       };
 
       expect(cb).toHaveBeenCalledWith(startCell, endCell, expect.anything());
@@ -282,17 +224,13 @@ describe('Parser', () => {
       const cb = jest.fn();
 
       parser.on('callRangeValue', cb);
-      parser._callRangeValue('B$2', 'A$8');
+      parser._callRangeValue('B2', 'A8');
 
       const startCell = {
-        row: {index: 1, isAbsolute: true, label: '2'},
-        column: {index: 0, isAbsolute: false, label: 'A'},
-        label: 'A$2',
+        label: 'B2'
       };
       const endCell = {
-        row: {index: 7, isAbsolute: true, label: '8'},
-        column: {index: 1, isAbsolute: false, label: 'B'},
-        label: 'B$8',
+        label: 'A8'
       };
 
       expect(cb).toHaveBeenCalledWith(startCell, endCell, expect.anything());

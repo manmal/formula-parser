@@ -11,8 +11,8 @@ describe('.parse() lookup-reference formulas', () => {
   });
 
   it('MATCH', () => {
-    parser.setVariable('foo', [0, 1, 2, 3, 4, 100, 7]);
-    parser.setVariable('bar', ['jima', 'jimb', 'jimc', 'bernie']);
+    parser.setConstant('foo', [0, 1, 2, 3, 4, 100, 7]);
+    parser.setConstant('bar', ['jima', 'jimb', 'jimc', 'bernie']);
 
     expect(parser.parse('MATCH()')).toMatchObject({error: '#N/A', result: null});
     expect(parser.parse('MATCH(1)')).toMatchObject({error: '#N/A', result: null});

@@ -21,16 +21,16 @@ class Parser extends Emitter {
       callVariable: (variable) => this._callVariable(variable),
       evaluateByOperator,
       callFunction: (name, params) => this._callFunction(name, params),
-      cellValue: (value) => this._callCellValue(value),
+      referenceValue: (value) => this._callReferenceValue(value),
       rangeValue: (start, end) => this._callRangeValue(start, end),
     };
     this.variables = Object.create(null);
     this.functions = Object.create(null);
 
     this
-      .setVariable('TRUE', true)
-      .setVariable('FALSE', false)
-      .setVariable('NULL', null);
+      .setConstant('TRUE', true)
+      .setConstant('FALSE', false)
+      .setConstant('NULL', null);
   }
 
   /**
@@ -77,7 +77,7 @@ class Parser extends Emitter {
    * @param {*} value Variable value.
    * @returns {Parser}
    */
-  setVariable(name, value) {
+  setConstant(name, value) {
     this.variables[name] = value;
 
     return this;
@@ -171,15 +171,16 @@ class Parser extends Emitter {
    * @returns {*}
    * @private
    */
-  _callCellValue(label) {
-    label = label.toUpperCase();
-
-    const [row, column] = extractLabel(label);
+  _callReferenceValue(label) {
     let value = void 0;
 
-    this.emit('callCellValue', {label, row, column}, (_value) => {
+    this.emit('callReferenceValue', {label}, (_value) => {
       value = _value;
     });
+
+    if (typeof value === 'undefined') {
+      value = this.variables[label];
+    }
 
     return value;
   }
@@ -193,39 +194,11 @@ class Parser extends Emitter {
    * @private
    */
   _callRangeValue(startLabel, endLabel) {
-    startLabel = startLabel.toUpperCase();
-    endLabel = endLabel.toUpperCase();
     let startCell = {};
     let endCell = {};
-
-    if (startLabel.charAt(0) === "@" && endLabel.charAt(0) === "@") {
-      // Named cell range
-      startCell.label = startLabel;
-      endCell.label = endLabel;
-    } else {
-      // Other ranges
-      const [startRow, startColumn] = extractLabel(startLabel);
-      const [endRow, endColumn] = extractLabel(endLabel);
-  
-      if (startRow.index <= endRow.index) {
-        startCell.row = startRow;
-        endCell.row = endRow;
-      } else {
-        startCell.row = endRow;
-        endCell.row = startRow;
-      }
-  
-      if (startColumn.index <= endColumn.index) {
-        startCell.column = startColumn;
-        endCell.column = endColumn;
-      } else {
-        startCell.column = endColumn;
-        endCell.column = startColumn;
-      }
-  
-      startCell.label = toLabel(startCell.row, startCell.column);
-      endCell.label = toLabel(endCell.row, endCell.column);
-    }
+    
+    startCell.label = startLabel;
+    endCell.label = endLabel;
   
     let value = [];
 

@@ -19,8 +19,8 @@ describe('.parse() variable', () => {
   it('should evaluate custom variables', () => {
     expect(parser.parse('foo')).toMatchObject({error: '#NAME?', result: null});
 
-    parser.setVariable('foo', 'bar');
-    parser.setVariable('baz', '6.6');
+    parser.setConstant('foo', 'bar');
+    parser.setConstant('baz', '6.6');
 
     expect(parser.parse('foo')).toMatchObject({error: null, result: 'bar'});
     expect(parser.parse('SUM(baz, 2.1, 0.2)')).toMatchObject({error: null, result: 8.899999999999999});

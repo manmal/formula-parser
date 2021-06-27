@@ -164,8 +164,8 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('CORREL', () => {
-    parser.setVariable('foo', [3, 2, 4, 5, 6]);
-    parser.setVariable('bar', [9, 7, 12, 15, 17]);
+    parser.setConstant('foo', [3, 2, 4, 5, 6]);
+    parser.setConstant('bar', [9, 7, 12, 15, 17]);
 
     expect(parser.parse('CORREL()')).toMatchObject({error: '#ERROR!', result: null});
     expect(parser.parse('CORREL(foo, bar)')).toBeMatchCloseTo({error: null, result: 0.9970544855015815});
@@ -190,7 +190,7 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('COUNTIF', () => {
-    parser.setVariable('foo', [1, null, 3, 'a', '']);
+    parser.setConstant('foo', [1, null, 3, 'a', '']);
     parser.on('callRangeValue', (a, b, done) => {
       if (a.label === 'A1' && b.label === 'C2') {
         done([[1, null, 3], ['a', 4, 'c']]);
@@ -202,7 +202,7 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('COUNTIFS', () => {
-    parser.setVariable('foo', [1, null, 3, 'a', '']);
+    parser.setConstant('foo', [1, null, 3, 'a', '']);
     parser.on('callRangeValue', (a, b, done) => {
       if (a.label === 'A1' && b.label === 'C2') {
         done([[1, null, 3], ['a', 4, 'c']]);
@@ -214,7 +214,7 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('COUNTIN', () => {
-    parser.setVariable('foo', [1, 1, 2, 2, 2]);
+    parser.setConstant('foo', [1, 1, 2, 2, 2]);
 
     expect(parser.parse('COUNTIN(foo, 1)')).toMatchObject({error: null, result: 2});
     expect(parser.parse('COUNTIN(foo, 2)')).toMatchObject({error: null, result: 3});
@@ -227,21 +227,21 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('COVARIANCE.P', () => {
-    parser.setVariable('foo', [3, 2, 4, 5, 6]);
-    parser.setVariable('bar', [9, 7, 12, 15, 17]);
+    parser.setConstant('foo', [3, 2, 4, 5, 6]);
+    parser.setConstant('bar', [9, 7, 12, 15, 17]);
 
     expect(parser.parse('COVARIANCE.P(foo, bar)')).toMatchObject({error: null, result: 5.2});
   });
 
   it('COVARIANCE.S', () => {
-    parser.setVariable('foo', [2, 4, 8]);
-    parser.setVariable('bar', [5, 11, 12]);
+    parser.setConstant('foo', [2, 4, 8]);
+    parser.setConstant('bar', [5, 11, 12]);
 
     expect(parser.parse('COVARIANCE.S(foo, bar)')).toBeMatchCloseTo({error: null, result: 9.666666666});
   });
 
   it('DEVSQ', () => {
-    parser.setVariable('foo', [4, 5, 8, 7, 11, 4, 3]);
+    parser.setConstant('foo', [4, 5, 8, 7, 11, 4, 3]);
 
     expect(parser.parse('DEVSQ(foo)')).toMatchObject({error: null, result: 48});
   });
@@ -300,15 +300,15 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('FORECAST', () => {
-    parser.setVariable('foo', [6, 7, 9, 15, 21]);
-    parser.setVariable('bar', [20, 28, 31, 38, 40]);
+    parser.setConstant('foo', [6, 7, 9, 15, 21]);
+    parser.setConstant('bar', [20, 28, 31, 38, 40]);
 
     expect(parser.parse('FORECAST(30, foo, bar)')).toBeMatchCloseTo({error: null, result: 10.607253086419755});
   });
 
   it('FREQUENCY', () => {
-    parser.setVariable('foo', [79, 85, 78, 85, 50, 81, 95, 88, 97]);
-    parser.setVariable('bar', [70, 79, 89]);
+    parser.setConstant('foo', [79, 85, 78, 85, 50, 81, 95, 88, 97]);
+    parser.setConstant('bar', [70, 79, 89]);
 
     expect(parser.parse('FREQUENCY(foo, bar)')).toMatchObject({error: null, result: [1, 2, 4, 2]});
   });
@@ -351,15 +351,15 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('GEOMEAN', () => {
-    parser.setVariable('foo', [4, 5, 8, 7, 11, 4, 3]);
+    parser.setConstant('foo', [4, 5, 8, 7, 11, 4, 3]);
 
     expect(parser.parse('GEOMEAN(foo)')).toBeMatchCloseTo({error: null, result: 5.476986969656962});
   });
 
   it('GROWTH', () => {
-    parser.setVariable('foo', [33100, 47300, 69000, 102000, 150000, 220000]);
-    parser.setVariable('bar', [11, 12, 13, 14, 15, 16]);
-    parser.setVariable('baz', [11, 12, 13, 14, 15, 16, 17, 18, 19]);
+    parser.setConstant('foo', [33100, 47300, 69000, 102000, 150000, 220000]);
+    parser.setConstant('bar', [11, 12, 13, 14, 15, 16]);
+    parser.setConstant('baz', [11, 12, 13, 14, 15, 16, 17, 18, 19]);
 
     const result = parser.parse('GROWTH(foo, bar, baz)');
 
@@ -376,7 +376,7 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('HARMEAN', () => {
-    parser.setVariable('foo', [4, 5, 8, 7, 11, 4, 3]);
+    parser.setConstant('foo', [4, 5, 8, 7, 11, 4, 3]);
 
     expect(parser.parse('HARMEAN(foo)')).toBeMatchCloseTo({error: null, result: 5.028375962061728});
   });
@@ -391,39 +391,39 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('INTERCEPT', () => {
-    parser.setVariable('foo', [2, 3, 9, 1, 8]);
-    parser.setVariable('bar', [6, 5, 11, 7, 5]);
+    parser.setConstant('foo', [2, 3, 9, 1, 8]);
+    parser.setConstant('bar', [6, 5, 11, 7, 5]);
 
     expect(parser.parse('INTERCEPT(foo, bar)')).toBeMatchCloseTo({error: null, result: 0.04838709677419217});
   });
 
   it('KURT', () => {
-    parser.setVariable('foo', [3, 4, 5, 2, 3, 4, 5, 6, 4, 7]);
-    parser.setVariable('bar', [3, 4, 5, 2, 3, 4, 5, 'dewdwe', 4, 7]);
+    parser.setConstant('foo', [3, 4, 5, 2, 3, 4, 5, 6, 4, 7]);
+    parser.setConstant('bar', [3, 4, 5, 2, 3, 4, 5, 'dewdwe', 4, 7]);
 
     expect(parser.parse('KURT(foo)')).toBeMatchCloseTo({error: null, result: -0.15179963720841627});
     expect(parser.parse('KURT(bar)')).toMatchObject({error: '#VALUE!', result: null});
   });
 
   it('LARGE', () => {
-    parser.setVariable('foo', [3, 5, 3, 5, 4]);
-    parser.setVariable('bar', [3, 5, 3, 'dwedwed', 4]);
+    parser.setConstant('foo', [3, 5, 3, 5, 4]);
+    parser.setConstant('bar', [3, 5, 3, 'dwedwed', 4]);
 
     expect(parser.parse('LARGE(foo, 3)')).toMatchObject({error: null, result: 4});
     expect(parser.parse('LARGE(bar, 3)')).toMatchObject({error: '#VALUE!', result: null});
   });
 
   it('LINEST', () => {
-    parser.setVariable('foo', [1, 9, 5, 7]);
-    parser.setVariable('bar', [0, 4, 2, 3]);
+    parser.setConstant('foo', [1, 9, 5, 7]);
+    parser.setConstant('bar', [0, 4, 2, 3]);
 
     expect(parser.parse('LINEST(foo, bar)')).toMatchObject({error: null, result: [2, 1]});
     expect(parser.parse('LINEST(foo, "aaaaaa")')).toMatchObject({error: '#VALUE!', result: null});
   });
 
   it('LOGEST', () => {
-    parser.setVariable('foo', [1, 9, 5, 7]);
-    parser.setVariable('bar', [0, 4, 2, 3]);
+    parser.setConstant('foo', [1, 9, 5, 7]);
+    parser.setConstant('bar', [0, 4, 2, 3]);
 
     expect(parser.parse('LOGEST(foo, bar)')).toMatchObject({error: null, result: [1.751116, 1.194316]});
     expect(parser.parse('LOGEST(foo, "aaaaaa")')).toMatchObject({error: '#VALUE!', result: null});
@@ -472,8 +472,8 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('MODEMULT', () => {
-    parser.setVariable('foo', [1, 2, 3, 4, 3, 2, 1, 2, 3, 5, 6, 1]);
-    parser.setVariable('bar', [1, 2, 'dewdew', 4, 3, 2, 1, 2, 3, 5, 6, 1]);
+    parser.setConstant('foo', [1, 2, 3, 4, 3, 2, 1, 2, 3, 5, 6, 1]);
+    parser.setConstant('bar', [1, 2, 'dewdew', 4, 3, 2, 1, 2, 3, 5, 6, 1]);
 
     expect(parser.parse('MODEMULT(foo)')).toMatchObject({error: null, result: [2, 3, 1]});
     expect(parser.parse('MODE.MULT(foo)')).toMatchObject({error: null, result: [2, 3, 1]});
@@ -481,8 +481,8 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('MODESNGL', () => {
-    parser.setVariable('foo', [5.6, 4, 4, 3, 2, 4]);
-    parser.setVariable('bar', [5.6, 'dewdew', 4, 3, 2, 4]);
+    parser.setConstant('foo', [5.6, 4, 4, 3, 2, 4]);
+    parser.setConstant('bar', [5.6, 'dewdew', 4, 3, 2, 4]);
 
     expect(parser.parse('MODESNGL(foo)')).toMatchObject({error: null, result: 4});
     expect(parser.parse('MODE.SNGL(foo)')).toMatchObject({error: null, result: 4});
@@ -529,17 +529,17 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('PEARSON', () => {
-    parser.setVariable('foo', [9, 7, 5, 3, 1]);
-    parser.setVariable('bar', [10, 6, 1, 5, 3]);
-    parser.setVariable('baz', [10, 'dewdewd', 1, 5, 3]);
+    parser.setConstant('foo', [9, 7, 5, 3, 1]);
+    parser.setConstant('bar', [10, 6, 1, 5, 3]);
+    parser.setConstant('baz', [10, 'dewdewd', 1, 5, 3]);
 
     expect(parser.parse('PEARSON(foo, bar)')).toBeMatchCloseTo({error: null, result: 0.6993786061802354});
     expect(parser.parse('PEARSON(foo, baz)')).toMatchObject({error: '#VALUE!', result: null});
   });
 
   it('PERCENTILEEXC', () => {
-    parser.setVariable('foo', [1, 2, 3, 4]);
-    parser.setVariable('bar', [1, 'dewdew', 3, 4]);
+    parser.setConstant('foo', [1, 2, 3, 4]);
+    parser.setConstant('bar', [1, 'dewdew', 3, 4]);
 
     expect(parser.parse('PERCENTILEEXC(foo, 0)')).toMatchObject({error: '#NUM!', result: null});
     expect(parser.parse('PERCENTILEEXC(foo, 0.5)')).toMatchObject({error: null, result: 2.5});
@@ -547,8 +547,8 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('PERCENTILEINC', () => {
-    parser.setVariable('foo', [1, 2, 3, 4]);
-    parser.setVariable('bar', [1, 'dewdew', 3, 4]);
+    parser.setConstant('foo', [1, 2, 3, 4]);
+    parser.setConstant('bar', [1, 'dewdew', 3, 4]);
 
     expect(parser.parse('PERCENTILEINC(foo, 0)')).toMatchObject({error: null, result: 1});
     expect(parser.parse('PERCENTILEINC(foo, 0.5)')).toMatchObject({error: null, result: 2.5});
@@ -556,8 +556,8 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('PERCENTRANKEXC', () => {
-    parser.setVariable('foo', [1, 2, 3, 4]);
-    parser.setVariable('bar', [1, 'dewdew', 3, 4]);
+    parser.setConstant('foo', [1, 2, 3, 4]);
+    parser.setConstant('bar', [1, 'dewdew', 3, 4]);
 
     expect(parser.parse('PERCENTRANKEXC(foo, 1)')).toMatchObject({error: null, result: 0.2});
     expect(parser.parse('PERCENTRANKEXC(foo, 4)')).toMatchObject({error: null, result: 0.8});
@@ -565,8 +565,8 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('PERCENTRANKINC', () => {
-    parser.setVariable('foo', [1, 2, 3, 4]);
-    parser.setVariable('bar', [1, 'dewdew', 3, 4]);
+    parser.setConstant('foo', [1, 2, 3, 4]);
+    parser.setConstant('bar', [1, 'dewdew', 3, 4]);
 
     expect(parser.parse('PERCENTRANKINC(foo, 1)')).toMatchObject({error: null, result: 0});
     expect(parser.parse('PERCENTRANKINC(foo, 4)')).toMatchObject({error: null, result: 1});
@@ -599,9 +599,9 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('PROB', () => {
-    parser.setVariable('foo', [0, 1, 2, 3]);
-    parser.setVariable('bar', [0.2, 0.3, 0.1, 0.4]);
-    parser.setVariable('baz', [0, 'dewd', 2, 3]);
+    parser.setConstant('foo', [0, 1, 2, 3]);
+    parser.setConstant('bar', [0.2, 0.3, 0.1, 0.4]);
+    parser.setConstant('baz', [0, 'dewd', 2, 3]);
 
     expect(parser.parse('PROB(foo, bar, 2)')).toMatchObject({error: null, result: 0.1});
     expect(parser.parse('PROB(foo, bar, 1, 3)')).toMatchObject({error: null, result: 0.8});
@@ -610,7 +610,7 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('QUARTILEEXC', () => {
-    parser.setVariable('foo', [6, 7, 15, 36, 39, 40, 41, 42, 43, 47, 49]);
+    parser.setConstant('foo', [6, 7, 15, 36, 39, 40, 41, 42, 43, 47, 49]);
 
     expect(parser.parse('QUARTILEEXC(foo, 1)')).toMatchObject({error: null, result: 15});
     expect(parser.parse('QUARTILEEXC(foo, 2)')).toMatchObject({error: null, result: 40});
@@ -620,7 +620,7 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('QUARTILEINC', () => {
-    parser.setVariable('foo', [1, 2, 4, 7, 8, 9, 10, 12]);
+    parser.setConstant('foo', [1, 2, 4, 7, 8, 9, 10, 12]);
 
     expect(parser.parse('QUARTILEINC(foo, 1)')).toMatchObject({error: null, result: 3.5});
     expect(parser.parse('QUARTILEINC(foo, 2)')).toMatchObject({error: null, result: 7.5});
@@ -630,7 +630,7 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('RANKAVG', () => {
-    parser.setVariable('foo', [89, 88, 92, 101, 94, 97, 95]);
+    parser.setConstant('foo', [89, 88, 92, 101, 94, 97, 95]);
 
     expect(parser.parse('RANKAVG(94, foo)')).toMatchObject({error: null, result: 4});
     expect(parser.parse('RANKAVG(88, foo, 1)')).toMatchObject({error: null, result: 1});
@@ -639,7 +639,7 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('RANKEQ', () => {
-    parser.setVariable('foo', [7, 3.5, 3.5, 1, 2]);
+    parser.setConstant('foo', [7, 3.5, 3.5, 1, 2]);
 
     expect(parser.parse('RANKEQ(7, foo, 1)')).toMatchObject({error: null, result: 5});
     expect(parser.parse('RANKEQ(2, foo)')).toMatchObject({error: null, result: 4});
@@ -673,25 +673,25 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('RSQ', () => {
-    parser.setVariable('foo', [2, 3, 9, 1, 8, 7, 5]);
-    parser.setVariable('bar', [6, 5, 11, 7, 5, 4, 4]);
-    parser.setVariable('baz', [6, 'dwe', 11, 7, 5, 4, 4]);
+    parser.setConstant('foo', [2, 3, 9, 1, 8, 7, 5]);
+    parser.setConstant('bar', [6, 5, 11, 7, 5, 4, 4]);
+    parser.setConstant('baz', [6, 'dwe', 11, 7, 5, 4, 4]);
 
     expect(parser.parse('RSQ(foo, bar)')).toBeMatchCloseTo({error: null, result: 0.05795019157088122});
     expect(parser.parse('RSQ(baz, bar)')).toMatchObject({error: '#VALUE!', result: null});
   });
 
   it('SKEW', () => {
-    parser.setVariable('foo', [3, 4, 5, 2, 3, 4, 5, 6, 4, 7]);
-    parser.setVariable('bar', [3, 'dwe', 5, 2, 3, 4, 5, 6, 4, 7]);
+    parser.setConstant('foo', [3, 4, 5, 2, 3, 4, 5, 6, 4, 7]);
+    parser.setConstant('bar', [3, 'dwe', 5, 2, 3, 4, 5, 6, 4, 7]);
 
     expect(parser.parse('SKEW(foo)')).toBeMatchCloseTo({error: null, result: 0.3595430714067974});
     expect(parser.parse('SKEW(bar)')).toMatchObject({error: '#VALUE!', result: null});
   });
 
   it('SKEWP', () => {
-    parser.setVariable('foo', [3, 4, 5, 2, 3, 4, 5, 6, 4, 7]);
-    parser.setVariable('bar', [3, 'dwe', 5, 2, 3, 4, 5, 6, 4, 7]);
+    parser.setConstant('foo', [3, 4, 5, 2, 3, 4, 5, 6, 4, 7]);
+    parser.setConstant('bar', [3, 'dwe', 5, 2, 3, 4, 5, 6, 4, 7]);
 
     expect(parser.parse('SKEWP(foo)')).toBeMatchCloseTo({error: null, result: 0.303193339354144});
     expect(parser.parse('SKEW.P(foo)')).toBeMatchCloseTo({error: null, result: 0.303193339354144});
@@ -700,17 +700,17 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('SLOPE', () => {
-    parser.setVariable('foo', [2, 3, 9, 1, 8, 7, 5]);
-    parser.setVariable('bar', [6, 5, 11, 7, 5, 4, 4]);
-    parser.setVariable('baz', [6, 'dwe', 11, 7, 5, 4, 4]);
+    parser.setConstant('foo', [2, 3, 9, 1, 8, 7, 5]);
+    parser.setConstant('bar', [6, 5, 11, 7, 5, 4, 4]);
+    parser.setConstant('baz', [6, 'dwe', 11, 7, 5, 4, 4]);
 
     expect(parser.parse('SLOPE(foo, bar)')).toBeMatchCloseTo({error: null, result: 0.3055555555555556});
     expect(parser.parse('SLOPE(baz, bar)')).toMatchObject({error: '#VALUE!', result: null});
   });
 
   it('SMALL', () => {
-    parser.setVariable('foo', [3, 4, 5, 2, 3, 4, 6, 4, 7]);
-    parser.setVariable('bar', [3, 4, 'dwe', 2, 3, 4, 6, 4, 7]);
+    parser.setConstant('foo', [3, 4, 5, 2, 3, 4, 6, 4, 7]);
+    parser.setConstant('bar', [3, 4, 'dwe', 2, 3, 4, 6, 4, 7]);
 
     expect(parser.parse('SMALL(foo, 4)')).toMatchObject({error: null, result: 4});
     expect(parser.parse('SMALL(bar, 4)')).toMatchObject({error: '#VALUE!', result: null});
@@ -724,35 +724,35 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('STDEVP', () => {
-    parser.setVariable('foo', [1345, 1301, 1368, 1322, 1310, 1370, 1318, 1350, 1303, 1299]);
+    parser.setConstant('foo', [1345, 1301, 1368, 1322, 1310, 1370, 1318, 1350, 1303, 1299]);
 
     expect(parser.parse('STDEVP(foo)')).toBeMatchCloseTo({error: null, result: 26.054558142482477});
     expect(parser.parse('STDEV.P(foo)')).toBeMatchCloseTo({error: null, result: 26.054558142482477});
   });
 
   it('STDEVS', () => {
-    parser.setVariable('foo', [1345, 1301, 1368, 1322, 1310, 1370, 1318, 1350, 1303, 1299]);
+    parser.setConstant('foo', [1345, 1301, 1368, 1322, 1310, 1370, 1318, 1350, 1303, 1299]);
 
     expect(parser.parse('STDEVS(foo)')).toBeMatchCloseTo({error: null, result: 27.46391571984349});
     expect(parser.parse('STDEV.S(foo)')).toBeMatchCloseTo({error: null, result: 27.46391571984349});
   });
 
   it('STDEVA', () => {
-    parser.setVariable('foo', [1345, 1301, 1368, 1322, 1310, 1370, 1318, 1350, 1303, 1299]);
+    parser.setConstant('foo', [1345, 1301, 1368, 1322, 1310, 1370, 1318, 1350, 1303, 1299]);
 
     expect(parser.parse('STDEVA(foo)')).toBeMatchCloseTo({error: null, result: 27.46391571984349});
   });
 
   it('STDEVPA', () => {
-    parser.setVariable('foo', [1345, 1301, 1368, 1322, 1310, 1370, 1318, 1350, 1303, 1299]);
+    parser.setConstant('foo', [1345, 1301, 1368, 1322, 1310, 1370, 1318, 1350, 1303, 1299]);
 
     expect(parser.parse('STDEVPA(foo)')).toBeMatchCloseTo({error: null, result: 26.054558142482477});
   });
 
   it('STEYX', () => {
-    parser.setVariable('foo', [2, 3, 9, 1, 8, 7, 5]);
-    parser.setVariable('bar', [6, 5, 11, 7, 5, 4, 4]);
-    parser.setVariable('baz', [6, 5, 'dwe', 7, 5, 4, 4]);
+    parser.setConstant('foo', [2, 3, 9, 1, 8, 7, 5]);
+    parser.setConstant('bar', [6, 5, 11, 7, 5, 4, 4]);
+    parser.setConstant('baz', [6, 5, 'dwe', 7, 5, 4, 4]);
 
     expect(parser.parse('STEYX(foo, bar)')).toBeMatchCloseTo({error: null, result: 3.305718950210041});
     expect(parser.parse('STEYX(baz, bar)')).toMatchObject({error: '#VALUE!', result: null});
@@ -806,17 +806,17 @@ describe('.parse() statistical formulas', () => {
   });
 
   it('TREND', () => {
-    parser.setVariable('foo', [1, 9, 5, 7]);
-    parser.setVariable('bar', [0, 4, 2, 3]);
-    parser.setVariable('baz', [5, 8]);
+    parser.setConstant('foo', [1, 9, 5, 7]);
+    parser.setConstant('bar', [0, 4, 2, 3]);
+    parser.setConstant('baz', [5, 8]);
 
     expect(parser.parse('TREND(foo, bar, baz)')).toMatchObject({error: null, result: [11, 17]});
     expect(parser.parse('TREND(foo, bar, "dwe")')).toMatchObject({error: '#VALUE!', result: null});
   });
 
   it('TRIMMEAN', () => {
-    parser.setVariable('foo', [4, 5, 6, 7, 2, 3, 4, 5, 1, 2, 3]);
-    parser.setVariable('bar', [4, 5, 'dwe', 7, 2, 3, 4, 5, 1, 2, 3]);
+    parser.setConstant('foo', [4, 5, 6, 7, 2, 3, 4, 5, 1, 2, 3]);
+    parser.setConstant('bar', [4, 5, 'dwe', 7, 2, 3, 4, 5, 1, 2, 3]);
 
     expect(parser.parse('TRIMMEAN(foo, 0.2)')).toBeMatchCloseTo({error: null, result: 3.777777777777});
     expect(parser.parse('TRIMMEAN(bar, 0.2)')).toMatchObject({error: '#VALUE!', result: null});

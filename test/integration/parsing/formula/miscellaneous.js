@@ -49,7 +49,7 @@ describe('.parse() miscellaneous formulas', () => {
   });
 
   it('REFERENCE', () => {
-    parser.on('callCellValue', (a, done) => {
+    parser.on('callReferenceValue', (a, done) => {
       if (a.label === 'A1') {
         done({name: {firstName: 'Jim'}});
       }

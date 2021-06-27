@@ -68,28 +68,6 @@ parser.parse('(1 + 5 + (5 * 10)) / 10'); // returns `Object {error: null, result
 parser.parse('SUM(MY_VAR)'); // returns `Object {error: "#NAME?", result: null}`
 parser.parse('1;;1'); // returns `Object {error: "#ERROR!", result: null}`
 ```
-
-### .setVariable(name, value)
-
-Set predefined variable name which can be visible while parsing formula expression.
-
-```js
-parser.setVariable('MY_VARIABLE', 5);
-parser.setVariable('fooBar', 10);
-
-parser.parse('(1 + MY_VARIABLE + (5 * fooBar)) / fooBar'); // returns `5.6`
-```
-
-### .getVariable(name)
-
-Get variable name.
-
-```js
-parser.setVariable('fooBar', 10);
-
-parser.getVariable('fooBar'); // returns `10`
-```
-
 ### .setFunction(name, fn)
 
 Set custom function which can be visible while parsing formula expression.
@@ -133,7 +111,7 @@ require('hot-formula-parser').SUPPORTED_FORMULAS; // An array of formula names
 
 ### 'callVariable' (name, done)
 
-Fired while retrieving variable. If variable was defined earlier using `setVariable` you can overwrite it by this hook.
+Fired while retrieving variable. If variable was defined earlier using `setConstant` you can overwrite it by this hook.
 
 ```js
 parser.on('callVariable', function(name, done) {
@@ -160,12 +138,12 @@ parser.on('callFunction', function(name, params, done) {
 parser.parse('ADD_5(3)'); // returns `8`
 ```
 
-### 'callCellValue' (cellCoord, done)
+### 'callReferenceValue' (cellCoord, done)
 
-Fired while retrieving cell value by its label (eq: `B3`, `B$3`, `B$3`, `$B$3`).
+Fired while retrieving cell value by its label (eq: `B3`, `REF`, `@root`).
 
 ```js
-parser.on('callCellValue', function(cellCoord, done) {
+parser.on('callReferenceValue', function(cellCoord, done) {
   // using label
   if (cellCoord.label === 'B$6') {
     done('hello');
