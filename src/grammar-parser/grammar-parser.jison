@@ -2,44 +2,44 @@
 /* lexical grammar */
 %lex
 %%
-\s+                                                                                             {/* skip whitespace */}
-'"'("\\"["]|[^"])*'"'                                                                           {return 'STRING';}
-"'"('\\'[']|[^'])*"'"                                                                           {return 'STRING';}
-[A-Za-z]{1,}[A-Za-z_0-9\.]+(?=[(])                                                              {return 'FUNCTION';}
-'#'[A-Z0-9\/]+('!'|'?')?                                                                        {return 'ERROR';}
-'$'[A-Za-z]+'$'[0-9]+                                                                           {return 'ABSOLUTE_CELL';}
-'$'[A-Za-z]+[0-9]+                                                                              {return 'MIXED_CELL';}
-[A-Za-z]+'$'[0-9]+                                                                              {return 'MIXED_CELL';}
-[A-Za-z]+[0-9]+                                                                                 {return 'RELATIVE_CELL';}
-'@'[A-Z0-9_]+                                                                                {return 'NAMED_CELL';}
-[A-Za-z\.]+(?=[(])                                                                              {return 'FUNCTION';}
-[A-Za-z]{1,}[A-Za-z_0-9]+                                                                       {return 'VARIABLE';}
-[A-Za-z_]+                                                                                      {return 'VARIABLE';}
-[0-9]+                                                                                          {return 'NUMBER';}
-'['(.*)?']'                                                                                     {return 'ARRAY';}
-"&"                                                                                             {return '&';}
-" "                                                                                             {return ' ';}
-[.]                                                                                             {return 'DECIMAL';}
-":"                                                                                             {return ':';}
-";"                                                                                             {return ';';}
-","                                                                                             {return ',';}
-"*"                                                                                             {return '*';}
-"/"                                                                                             {return '/';}
-"-"                                                                                             {return '-';}
-"+"                                                                                             {return '+';}
-"^"                                                                                             {return '^';}
-"("                                                                                             {return '(';}
-")"                                                                                             {return ')';}
-">"                                                                                             {return '>';}
-"<"                                                                                             {return '<';}
-"NOT"                                                                                           {return 'NOT';}
-'"'                                                                                             {return '"';}
-"'"                                                                                             {return "'";}
-"!"                                                                                             {return "!";}
-"="                                                                                             {return '=';}
-"%"                                                                                             {return '%';}
-[#]                                                                                             {return '#';}
-<<EOF>>                                                                                         {return 'EOF';}
+\s+                                                          {/* skip whitespace */}
+'"'("\\"["]|[^"])*'"'                                        {return 'STRING';}
+"'"('\\'[']|[^'])*"'"                                        {return 'STRING';}
+[A-Za-z]{1,}[A-Za-z_0-9\.]+(?=[(])                           {return 'FUNCTION';}
+'#'[A-Z0-9\/]+('!'|'?')?                                     {return 'ERROR';}
+'$'[A-Za-z]+'$'[0-9]+                                        {return 'ABSOLUTE_CELL';}
+'$'[A-Za-z]+[0-9]+                                           {return 'MIXED_CELL';}
+[A-Za-z]+'$'[0-9]+                                           {return 'MIXED_CELL';}
+[A-Za-z]+[0-9]+                                              {return 'RELATIVE_CELL';}
+'@'[A-Z0-9_]+                                                {return 'NAMED_CELL';}
+[A-Za-z\.]+(?=[(])                                           {return 'FUNCTION';}
+[A-Za-z]{1,}[A-Za-z_0-9]+                                    {return 'VARIABLE';}
+[A-Za-z_]+                                                   {return 'VARIABLE';}
+[0-9]+                                                       {return 'NUMBER';}
+'['(.*)?']'                                                  {return 'ARRAY';}
+"&"                                                          {return '&';}
+" "                                                          {return ' ';}
+[.]                                                          {return 'DECIMAL';}
+":"                                                          {return ':';}
+";"                                                          {return ';';}
+","                                                          {return ',';}
+"*"                                                          {return '*';}
+"/"                                                          {return '/';}
+"-"                                                          {return '-';}
+"+"                                                          {return '+';}
+"^"                                                          {return '^';}
+"("                                                          {return '(';}
+")"                                                          {return ')';}
+">"                                                          {return '>';}
+"<"                                                          {return '<';}
+"NOT"                                                        {return 'NOT';}
+'"'                                                          {return '"';}
+"'"                                                          {return "'";}
+"!"                                                          {return "!";}
+"="                                                          {return '=';}
+"%"                                                          {return '%';}
+[#]                                                          {return '#';}
+<<EOF>>                                                      {return 'EOF';}
 /lex
 
 /* operator associations and precedence (low-top, high-bottom) */
