@@ -7,7 +7,7 @@
 "'"('\\'[']|[^'])*"'"                                        {return 'STRING';}
 [A-Za-z]{1,}[A-Za-z_0-9\.]+(?=[(])                           {return 'FUNCTION';}
 '#'[A-Z0-9\/]+('!'|'?')?                                     {return 'ERROR';}
-[A-Za-z@]{1,}[A-Za-z_0-9!@?]+                                {return 'REFERENCE';}
+[A-Za-z@]{1,}[A-Za-z_0-9\/@?]+                               {return 'REFERENCE';}
 [A-Za-z\.]+(?=[(])                                           {return 'FUNCTION';}
 [0-9]+                                                       {return 'NUMBER';}
 '['(.*)?']'                                                  {return 'ARRAY';}
